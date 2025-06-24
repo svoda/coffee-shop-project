@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Order Summary</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body class="order-summary-bg">
+    <div class="navbar">
+        <div class="brand">480 Coffee</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            {% if session.get('user') %}
+                <span class="welcome-text">Welcome, {{ session['user'].split('@')[0].capitalize() }}</span>
+                <form method="POST" action="{{ url_for('logout') }}" style="display: inline;">
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="order-summary-wrapper">
+        <h2>Order Summary</h2>
+        <p>- {{ drink_name }} x {{ quantity }} = ${{ total }}</p>
+        <p><strong>Total: ${{ total }}</strong></p>
+
+        <h3>Choose payment method:</h3>
+        <form method="POST">
+            <select name="payment_method" required>
+                <option value="cash">Cash</option>
+                <option value="credit card">Credit Card</option>
+                <option value="app">App</option>
+            </select>
+            <input type="submit" value="Place Order">
+        </form>
+    </div>
+</body>
+</html>

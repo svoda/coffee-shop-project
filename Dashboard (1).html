@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - 480 Coffee</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="dashboard">
+
+
+    <div class="navbar">
+        <div class="brand">480 Coffee</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            {% if session.get('user') %}
+                <span class="welcome-text">Welcome, {{ session['user'].split('@')[0].capitalize() }}</span>
+                <form method="POST" action="{{ url_for('logout') }}" style="display: inline;">
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
+    </div>
+    <!-- Main Dashboard Content -->
+    <div class="dashboard-wrapper">
+        <div class="dashboard-card">
+            <h1 class="dashboard-welcome">Welcome, {{ name.capitalize() }}!</h1>
+            <h2 class="dashboard-role">Your Role: <span class="highlight-role">{{ roles | join(', ') }}</span></h2>
+            <p class="dashboard-subtext">Choose where you'd like to go:</p>
+            <div class="dashboard-links">
+                {% if 'manager' in roles %}
+                    <a href="{{ url_for('manager_menu') }}" class="dashboard-btn">Manager Menu</a>
+                {% endif %}
+                {% if 'barista' in roles %}
+                    <a href="{{ url_for('barista_menu') }}" class="dashboard-btn">Barista Menu</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Order Success</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+    window.onload = function() {
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
+    };
+    </script>
+</head>
+<body class="order-success-bg">
+
+    <div class="navbar">
+        <div class="brand">480 Coffee</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            {% if session.get('user') %}
+                <span class="welcome-text">Welcome, {{ session['user'].split('@')[0].capitalize() }}</span>
+                <form method="POST" action="{{ url_for('logout') }}" style="display: inline;">
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="order-success-wrapper">
+        <h2>🎉 Order placed successfully! 🎉</h2>
+
+        <p><strong>Total:</strong> ${{ '%.2f'|format(total_price) }}</p>
+
+        {% if discount > 0 %}
+        <p><strong>Discount applied:</strong> -${{ '%.2f'|format(discount) }}</p>
+        {% endif %}
+
+        <p><strong>Payment method:</strong> {{ payment_method }}</p>
+        <p><strong>New balance:</strong> ${{ '%.2f'|format(new_balance) }}</p>
+
+        <h3>Instructions:</h3>
+        <ul>
+            <li>{{ quantity }}x {{ drink_name }}:</li>
+            <ul>
+                {% for step in steps %}
+                    <li>{{ step[0] }}. {{ step[1] }}</li>
+                {% endfor %}
+            </ul>
+        </ul>
+
+        <form action="{{ url_for('barista_menu') }}">
+            <button type="submit">Back to Barista Menu</button>
+        </form>
+    </div>
+
+</body>
+</html>

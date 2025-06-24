@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Menu Item</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="form-page">
+    <div class="form-container">
+        <h2>Add New Menu Item</h2>
+        <form method="POST">
+            <label>Name:</label>
+            <input type="text" name="name" required>
+            <label>Size (oz):</label>
+            <input type="number" name="size" required>
+            <label>Type (coffee/tea/etc.):</label>
+            <input type="text" name="type" required>
+            <label>Price ($):</label>
+            <input type="number" step="0.01" name="price" required>
+            <label>Temperature (hot/cold):</label>
+            <input type="text" name="temp" required>
+            <input type="submit" value="Add Item">
+        </form>
+        {% if message %}
+        <div class="form-message">{{ message }}</div>
+        {% endif %}
+    </div>
+</body>
+</html>

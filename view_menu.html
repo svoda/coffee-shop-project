@@ -1,0 +1,53 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="view-menu-bg">
+
+    <div class="navbar">
+        <div class="brand">480 Coffee</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            {% if session.get('user') %}
+                <span class="welcome-text">Welcome, {{ session['user'].split('@')[0].capitalize() }}</span>
+                <form method="POST" action="{{ url_for('logout') }}" style="display: inline;">
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
+    </div>
+
+
+<div class="menu-table-container">
+    <h2>Menu Items</h2>
+    <table class="menu-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Size (oz)</th>
+                <th>Type</th>
+                <th>Price ($)</th>
+                <th>Temperature</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in menu %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.size }}</td>
+                <td>{{ item.type }}</td>
+                <td>{{ "%.2f"|format(item.price) }}</td>
+                <td>{{ item.temp }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>

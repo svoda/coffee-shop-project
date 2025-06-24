@@ -1,0 +1,123 @@
+--  employee 
+CREATE TABLE Employee 
+(
+    ssn VARCHAR(11) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    salary NUMERIC CHECK (salary > 0)
+);
+
+--  manager 
+CREATE TABLE Manager 
+(
+    ssn VARCHAR(11) PRIMARY KEY REFERENCES Employee(ssn),
+    ownership_percent NUMERIC NOT NULL
+);
+
+--  barista 
+CREATE TABLE Barista 
+(
+    ssn VARCHAR(11) PRIMARY KEY REFERENCES Employee(ssn)
+);
+
+--  schedule, weak entity 
+CREATE TABLE Schedule 
+(
+    ssn VARCHAR(11) REFERENCES Barista(ssn),
+    day_of_week VARCHAR(10) NOT NULL,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    PRIMARY KEY (ssn, day_of_week, start_time)
+);
+
+--  accounting entry 
+CREATE TABLE AccountingEntry 
+(
+    timestamp TIMESTAMP PRIMARY KEY,
+    balance NUMERIC NOT NULL
+);
+
+--  menu item 
+CREATE TABLE MenuItem 
+(
+    name VARCHAR(100) PRIMARY KEY,
+    size_oz NUMERIC NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    price NUMERIC CHECK (price > 0),
+    is_hot BOOLEAN NOT NULL
+);
+
+--  recipe 
+CREATE TABLE Recipe 
+(
+    menu_item_name VARCHAR(100) REFERENCES MenuItem(name),
+    step_number INTEGER,
+    step_name VARCHAR(200) NOT NULL,
+    PRIMARY KEY (menu_item_name, step_number)
+);
+
+--  inventory item 
+CREATE TABLE InventoryItem 
+(
+    name VARCHAR(100) PRIMARY KEY,
+    unit VARCHAR(20) NOT NULL,
+    price_per_unit NUMERIC CHECK (price_per_unit > 0),
+    in_stock NUMERIC CHECK (in_stock >= 0)
+);
+
+--  ingredient 
+CREATE TABLE Ingredient 
+(
+    recipe_name VARCHAR(100) NOT NULL,
+    item_name VARCHAR(100) NOT NULL,
+    quantity NUMERIC NOT NULL CHECK (quantity > 0),
+    unit VARCHAR(20) NOT NULL,
+    PRIMARY KEY (recipe_name, item_name),
+    FOREIGN KEY (recipe_name) REFERENCES MenuItem(name),
+    FOREIGN KEY (item_name) REFERENCES InventoryItem(name)
+);
+
+--  order 
+CREATE TABLE OrderRecord 
+(
+    order_time TIMESTAMP PRIMARY KEY,
+    payment_method VARCHAR(20) NOT NULL 
+                               CHECK (payment_method IN ('cash', 'credit card', 'app')),
+    total_price NUMERIC(10,2) NOT NULL
+);
+
+--  line item, weak entity
+CREATE TABLE LineItem 
+(
+    order_time TIMESTAMP REFERENCES OrderRecord(order_time),
+    menu_item_name VARCHAR(100) REFERENCES MenuItem(name),
+    quantity INTEGER CHECK (quantity > 0),
+    PRIMARY KEY (order_time, menu_item_name)
+);
+
+--  promotion 
+CREATE TABLE Promotion 
+(
+    promo_id SERIAL PRIMARY KEY,
+    description TEXT,
+    start_time TIME NOT NULL,
+    end_time TIME NOT NULL,
+    day_of_week VARCHAR(10) NOT NULL,
+    promo_price NUMERIC CHECK (promo_price > 0)
+);
+
+--  applies to, promotion:menu item relationship 
+CREATE TABLE AppliesTo 
+(
+    promo_id INTEGER REFERENCES Promotion(promo_id),
+    menu_item_name VARCHAR(100) REFERENCES MenuItem(name),
+    PRIMARY KEY (promo_id, menu_item_name)
+);
+
+--  indexes 
+CREATE INDEX idx_schedule_ssn ON Schedule(ssn);
+CREATE INDEX idx_barista_ssn ON Barista(ssn);
+CREATE INDEX idx_lineitem_order_time ON LineItem(order_time);
+CREATE INDEX idx_ingredient_item_name ON Ingredient(item_name);
+CREATE INDEX idx_menuitem_type ON MenuItem(type);
+CREATE INDEX idx_orderrecord_time ON OrderRecord(order_time);

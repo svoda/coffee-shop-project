@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>480 Coffee - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="home">
+
+    <div class="navbar">
+        <div class="brand">480 Coffee</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            {% if session.get('user') %}
+            <div class="dropdown">
+                <button class="dropbtn">Welcome, {{ session['user'].split('@')[0].capitalize() }} ▼</button>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('dashboard', user_id=session['user_id'], role=session['role']) }}">Dashboard</a>
+                    <form method="POST" action="{{ url_for('logout') }}" style="margin: 0;">
+                        <button type="submit" class="logout-link">Logout</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
+    </div>    
+    
+    <div class="hero-overlay">
+        <div class="hero-content">
+            <h1>Welcome to 480 Coffee</h1>
+            <p>Your cozy neighborhood cafe, where every cup is brewed with love </p>
+            <div class="hero-buttons">
+                <a href="{{ url_for('view_menu') }}" class="hero-btn">View Menu</a>
+                <a href="{{ url_for('llm_suggestions') }}" class="hero-btn">Drink & Order Suggestions</a>
+            </div>            
+        </div>
+    </div>
+
+</body>
+</html>

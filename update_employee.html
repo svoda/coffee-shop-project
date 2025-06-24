@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Employee Info</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="update-employee-bg">
+
+    <div class="navbar">
+        <div class="brand">480 Coffee</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            {% if session.get('user') %}
+                <span class="welcome-text">Welcome, {{ session['user'].split('@')[0].capitalize() }}</span>
+                <form method="POST" action="{{ url_for('logout') }}" style="display: inline;">
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
+    </div>
+<div class="update-employee-container">
+
+    <div class="update-employee-card">
+        <h2>Update Employee Info</h2>
+        <form action="{{ url_for('update_employee') }}" method="POST">
+            <label for="email">Employee Email:</label><br>
+            <input type="email" id="email" name="email" required><br><br>
+
+            <label for="new_salary">New Salary ($):</label><br>
+            <input type="number" id="new_salary" name="new_salary" step="0.01" required><br><br>
+
+            <input type="submit" value="Update Salary">
+        </form>
+
+        {% if message %}
+        <p class="status-msg">{{ message }}</p>
+        {% endif %}
+    </div>
+
+
+    <div class="employee-list-card">
+        <h2>Current Employees</h2>
+        <ul>
+            {% for name, email, salary in employees %}
+                <li><strong>{{ name }}</strong> ({{ email }}) — ${{ "%.2f"|format(salary) }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div> 
+
+<div class="back-button-container">
+    <a href="{{ url_for('manager_menu') }}" class="back-button">Back</a>
+</div>
+
+</body>
+</html>

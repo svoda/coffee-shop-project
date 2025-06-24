@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Top Revenue Drinks</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="form-page">
+    <div class="form-container">
+        <h2>Top Revenue-Generating Drinks</h2>
+        <ul>
+        {% for drink, revenue in results %}
+            <li>{{ drink }} — ${{ "%.2f"|format(revenue) }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

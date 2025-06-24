@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Accounting Report - 480 Coffee</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="accounting-history-bg">
+
+
+    
+    <div class="navbar">
+        <div class="brand">480 Coffee</div>
+        <div class="nav-links">
+            <a href="{{ url_for('manager_menu') }}">Back to Manager Menu</a>
+        </div>
+    </div>
+
+    <div class="accounting-page-container">
+
+        <div class="accounting-card">
+            <h2> Accounting History</h2>
+
+            {% if total_balance >= 0 %}
+                <h3 class="positive-balance">Total Balance: ${{ "%.2f"|format(total_balance) }}</h3>
+            {% else %}
+                <h3 class="negative-balance">Total Balance: (${{ "%.2f"|format(total_balance * -1) }})</h3>
+            {% endif %}
+
+            <ul class="accounting-list">
+                {% for entry in history %}
+                    <li class="accounting-list-item">
+                        {{ entry[0] }} →
+                        {% if entry[1] >= 0 %}
+                            <span class="positive">${{ "%.2f"|format(entry[1]) }}</span>
+                        {% else %}
+                            <span class="negative">(${{ "%.2f"|format(entry[1] * -1) }})</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <div style="margin-top: 20px;">
+                <a href="{{ url_for('manager_menu') }}" class="back-button">Back to Manager Menu</a>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

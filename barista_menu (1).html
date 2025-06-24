@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Barista Menu</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="barista-menu-bg">
+
+    <div class="navbar">
+        <div class="brand">480 Coffee</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            {% if session.get('user') %}
+                <span class="welcome-text">Welcome, {{ session['user'].split('@')[0].capitalize() }}</span>
+                <form method="POST" action="{{ url_for('logout') }}" style="display: inline;">
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="barista-menu-wrapper" style="margin-top: 120px; text-align: center;">
+        <h1 style="color: #6f4e37;">Barista Menu</h1>
+
+        <div style="margin: 30px 0;">
+            <form action="{{ url_for('create_order') }}" style="display: inline-block; margin: 10px;">
+                <button type="submit" class="primary-button">Create Order</button>
+            </form>
+
+            <form action="{{ url_for('dashboard', user_id=session['user_id'], role=session['role']) }}" style="display: inline-block; margin: 10px;">
+                <button type="submit" class="secondary-button">Back</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

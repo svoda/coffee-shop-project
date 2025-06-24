@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Employee</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="delete-employee-bg">
+
+    <div class="navbar">
+        <div class="brand">480 Coffee</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            {% if session.get('user') %}
+                <span class="welcome-text">Welcome, {{ session['user'].split('@')[0].capitalize() }}</span>
+                <form method="POST" action="{{ url_for('logout') }}" style="display: inline;">
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
+    </div>
+
+<div class="delete-employee-wrapper">
+    <h2>Delete Employee</h2>
+
+    {% if employees %}
+        <div class="employee-list-scroll">
+            {% for emp in employees %}
+                <div class="employee-row">
+                    <div class="employee-info">{{ emp[1] }} (SSN: {{ emp[0] }})</div>
+                    <form action="{{ url_for('delete_employee') }}" method="POST" style="margin: 0;">
+                        <input type="hidden" name="ssn" value="{{ emp[0] }}">
+                        <button type="submit" class="primary-button">Delete</button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No employees found.</p>
+    {% endif %}
+
+    <div style="margin-top: 20px;">
+        <a href="{{ url_for('manager_menu') }}" class="back-button">Back to Manager Menu</a>
+    </div>
+</div>
+</body>
+</html>

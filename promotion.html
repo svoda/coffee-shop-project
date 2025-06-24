@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Active Promotions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="form-page">
+    <div class="form-container">
+        <h2>Current Promotions</h2>
+        {% if promotions %}
+        <ul>
+            {% for promo in promotions %}
+                <li>{{ promo.name }} — ${{ promo.price }} on {{ promo.day }} from {{ promo.start }} to {{ promo.end }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No active promotions.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

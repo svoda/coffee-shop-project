@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drink & Order Suggestions - 480 Coffee</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body class="llm-suggestions-bg">
+
+    <div class="navbar">
+        <div class="brand">480 Coffee</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            {% if session.get('user') %}
+                <span class="welcome-text">Welcome, {{ session['user'].split('@')[0].capitalize() }}</span>
+                <form method="POST" action="{{ url_for('logout') }}" style="display: inline;">
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="llm-suggestions-wrapper">
+        
+        <div class="suggestion-card">
+            <h2>Ask for Drink Facts</h2>
+            <form method="POST" action="{{ url_for('llm_suggestions') }}">
+                <input type="text" name="drink_name" placeholder="Enter a drink name..." required>
+                <button type="submit" name="action" value="drink_info" class="hero-btn">Get Drink Info</button>
+            </form>
+            {% if drink_facts %}
+                <div class="response-box">
+                    <h3>Drink Information</h3>
+                    <p>{{ drink_facts }}</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="suggestion-card">
+            <h2>Get Order Recommendations</h2>
+            <form method="POST" action="{{ url_for('llm_suggestions') }}">
+                <input type="text" name="order_details" placeholder="Describe the order (e.g., Latte x2)" required>
+                <button type="submit" name="action" value="order_recommendation" class="hero-btn">Suggest Add-Ons</button>
+            </form>
+            {% if order_recommendations %}
+                <div class="response-box">
+                    <h3>Suggested Add-Ons</h3>
+                    <p>{{ order_recommendations }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</body>
+</html>

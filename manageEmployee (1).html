@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Employees - 480 Coffee</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            padding: 30px;
+        }
+        h2, h3 {
+            color: #6f4e37;
+            text-align: center;
+        }
+        form {
+            max-width: 500px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="submit"] {
+            background-color: #6f4e37;
+            color: white;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #5a3c2a;
+        }
+        ul {
+            max-width: 500px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.05);
+        }
+        li {
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+    <h2>Manage Employees</h2>
+
+    <h3>Add Employee</h3>
+    <form method="POST">
+        <input type="hidden" name="action" value="add">
+        SSN: <input type="text" name="ssn" required>
+        Name: <input type="text" name="name" required>
+        Email: <input type="email" name="email" required>
+        Salary: <input type="text" name="salary" required>
+        Password: <input type="password" name="password" required>
+        <input type="submit" value="Add Employee">
+    </form>
+
+    <h3>Delete Employee</h3>
+    <form method="POST">
+        <input type="hidden" name="action" value="delete">
+        SSN: <input type="text" name="ssn" required>
+        <input type="submit" value="Delete Employee">
+    </form>
+
+    <h3>Employee List</h3>
+    <ul>
+        {% for emp in employees %}
+            <li>{{ emp[1] }} — {{ emp[2] }} — ${{ emp[3] }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

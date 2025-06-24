@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Order - 480 Coffee</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+    function updateTotal() {
+        const select = document.getElementById("drink_name");
+        const quantity = document.getElementById("quantity").value;
+        const price = parseFloat(select.options[select.selectedIndex].getAttribute("data-price"));
+        const total = price * quantity;
+        document.getElementById("total").innerText = "Total: $" + total.toFixed(2);
+    }
+    </script>
+</head>
+
+<body class="create-order-bg">
+    <div class="navbar">
+        <div class="brand">480 Coffee</div>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">Home</a>
+            {% if session.get('user') %}
+                <span class="welcome-text">Welcome, {{ session['user'].split('@')[0].capitalize() }}</span>
+                <form method="POST" action="{{ url_for('logout') }}" style="display: inline;">
+                    <button type="submit" class="logout-btn">Logout</button>
+                </form>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="create-order-wrapper">
+        <h2>Create New Order</h2>
+
+        <h3>Available Drinks:</h3>
+        <ul style="list-style: none; padding-left: 0;">
+          {% for item in menu %}
+            <li>{{ item.name }} (${{ item.price }}) - {{ item.temp }}</li>
+          {% endfor %}
+        </ul>
+
+        <form method="POST" action="/create_order">
+            <label for="drink_name">Drink Name:</label>
+            <select id="drink_name" name="drink_name" onchange="updateTotal()" required>
+                <optgroup label="Hot Drinks">
+                    {% for item in menu %}
+                        {% if item.temp == "hot" %}
+                            <option value="{{ item.name }}" data-price="{{ item.price }}">{{ item.name }} (${{ item.price }})</option>
+                        {% endif %}
+                    {% endfor %}
+                </optgroup>
+                <optgroup label="Cold Drinks">
+                    {% for item in menu %}
+                        {% if item.temp == "cold" %}
+                            <option value="{{ item.name }}" data-price="{{ item.price }}">{{ item.name }} (${{ item.price }})</option>
+                        {% endif %}
+                    {% endfor %}
+                </optgroup>
+            </select>
+
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" value="1" min="1" onchange="updateTotal()" required>
+
+            <p id="total">Total: $0.00</p>
+
+            <input type="submit" value="Create Order">
+        </form>
+
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
